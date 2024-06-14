@@ -26,6 +26,8 @@ public class CitizenController {
 
     @GetMapping("/list")
     public ResponseEntity<List<CitizenEntity>> list() {
+        CitizenEntity citizenEntity = citizenRepo.findAll().stream().sorted((a,b)-> b.getVid() - a.getVid()).findFirst().get();
+        System.out.println(citizenEntity);
         return new ResponseEntity<>(citizenRepo.findAll(), HttpStatus.OK);
     }
 
