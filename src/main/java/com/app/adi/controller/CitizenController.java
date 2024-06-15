@@ -12,7 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/citizen")
@@ -25,10 +28,14 @@ public class CitizenController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<CitizenEntity>> list() {
+    public ResponseEntity<?> list() {
         CitizenEntity citizenEntity = citizenRepo.findAll().stream().sorted((a,b)-> b.getVid() - a.getVid()).findFirst().get();
         System.out.println(citizenEntity);
-        return new ResponseEntity<>(citizenRepo.findAll(), HttpStatus.OK);
+
+        Map<CitizenEntity, Long> ans = citizenRepo.findAll().stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+
+        double avgVid = citizenRepo.findAll().stream().mapToInt(CitizenEntity::getVid).average().getAsDouble();
+        return new ResponseEntity<>(ans, HttpStatus.OK);
     }
 
     @GetMapping("/list/{id}")
