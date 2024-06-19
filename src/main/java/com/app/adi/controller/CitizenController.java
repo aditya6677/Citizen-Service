@@ -1,6 +1,7 @@
 package com.app.adi.controller;
 
 import com.app.adi.Entity.CitizenEntity;
+import com.app.adi.exceptions.CitizenNotFoundException;
 import com.app.adi.repository.CitizenRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -44,7 +45,7 @@ public class CitizenController {
         if(citizenEntity.isPresent()){
             return new ResponseEntity<>(citizenEntity.get(), HttpStatus.OK);
         }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        throw new CitizenNotFoundException("Citizen not found");
     }
 
     @GetMapping("/vid/{vid}")
